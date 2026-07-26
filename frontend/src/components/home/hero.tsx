@@ -102,6 +102,7 @@ export function Hero() {
         >
           <Button
             render={<Link href="/sansibar-touren" />}
+            nativeButton={false}
             size="lg"
             className="h-12 rounded-full px-8 text-base"
           >
@@ -115,6 +116,7 @@ export function Hero() {
                 rel="noopener noreferrer"
               />
             }
+            nativeButton={false}
             size="lg"
             variant="outline"
             className="h-12 rounded-full border-white/40 bg-white/5 px-8 text-base text-white hover:bg-white/15 hover:text-white"

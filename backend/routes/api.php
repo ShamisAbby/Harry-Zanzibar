@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\NewsletterController;
+use App\Http\Controllers\Api\TourCategoryController;
+use App\Http\Controllers\Api\TourController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,3 +27,10 @@ Route::get('/v1/ping', function (Request $request) {
 
 Route::post('/v1/newsletter', [NewsletterController::class, 'store'])
     ->middleware('throttle:6,1');
+
+Route::get('/v1/tours', [TourController::class, 'index']);
+Route::get('/v1/tours/{slug}', [TourController::class, 'show']);
+Route::get('/v1/tour-categories', [TourCategoryController::class, 'index']);
+
+Route::post('/v1/bookings', [BookingController::class, 'store'])
+    ->middleware('throttle:10,1');

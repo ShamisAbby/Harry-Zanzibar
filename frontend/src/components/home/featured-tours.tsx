@@ -1,25 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { TourCard } from "@/components/tours/tour-card";
-import { demoTours } from "@/data/demo-tours";
+import { getTours } from "@/lib/tours";
+import type { TourCategoryType, TourSummary } from "@/types/tour";
 import { cn } from "@/lib/utils";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
-const filters = [
+const filters: { key: TourCategoryType | "all"; label: string }[] = [
   { key: "all", label: "Alle Erlebnisse" },
   { key: "day-trip", label: "Tagesausflüge" },
   { key: "multi-day", label: "Mehrtagestouren" },
-] as const;
+];
 
 export function FeaturedTours() {
   const [active, setActive] = useState<(typeof filters)[number]["key"]>("all");
+  const [tours, setTours] = useState<TourSummary[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
   const containerRef = useScrollReveal<HTMLDivElement>("[data-reveal]");
 
-  const tours =
-    active === "all" ? demoTours : demoTours.filter((tour) => tour.category === active);
+  useEffect(() => {
+    let cancelled = false;
+    setIsLoading(true);
+    setError(false);
+
+    getTours({ type: active === "all" ? undefined : active, perPage: 6, sort: "featured" })
+      .then((res) => {
+        if (!cancelled) setTours(res.data);
+      })
+      .catch(() => {
+        if (!cancelled) setError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [active]);
 
   return (
     <section className="bg-background py-24 sm:py-32">
@@ -54,21 +77,34 @@ export function FeaturedTours() {
           ))}
         </div>
 
-        <div
-          ref={containerRef}
-          key={active}
-          className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {tours.map((tour) => (
-            <div key={tour.id} data-reveal>
-              <TourCard tour={tour} />
-            </div>
-          ))}
-        </div>
+        {error ? (
+          <p className="mt-10 text-center text-sm text-muted-foreground">
+            Touren konnten momentan nicht geladen werden. Bitte versuchen Sie es später erneut.
+          </p>
+        ) : isLoading ? (
+          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="aspect-[4/3] rounded-2xl" />
+            ))}
+          </div>
+        ) : (
+          <div
+            ref={containerRef}
+            key={active}
+            className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {tours.map((tour) => (
+              <div key={tour.id} data-reveal>
+                <TourCard tour={tour} />
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="mt-12 text-center">
           <Button
             render={<Link href="/sansibar-touren" />}
+            nativeButton={false}
             size="lg"
             variant="outline"
             className="rounded-full px-8"

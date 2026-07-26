@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Clock, Star } from "lucide-react";
 import { PlaceholderImage } from "@/components/ui/placeholder-image";
@@ -11,11 +12,21 @@ export function TourCard({ tour }: { tour: TourSummary }) {
       className="group flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card transition-shadow hover:shadow-xl hover:shadow-primary/10"
     >
       <div className="relative aspect-[4/3] overflow-hidden">
-        <PlaceholderImage
-          label={tour.image}
-          tone={tour.category === "multi-day" ? "sunset" : "ocean"}
-          className="size-full transition-transform duration-500 group-hover:scale-105"
-        />
+        {tour.image ? (
+          <Image
+            src={tour.image}
+            alt={tour.imageLabel}
+            fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <PlaceholderImage
+            label={tour.imageLabel}
+            tone={tour.category === "multi-day" ? "sunset" : "ocean"}
+            className="size-full transition-transform duration-500 group-hover:scale-105"
+          />
+        )}
         <Badge className="absolute left-3 top-3 bg-white/90 text-foreground hover:bg-white/90">
           {tour.category === "multi-day" ? "Mehrtagestour" : "Tagesausflug"}
         </Badge>

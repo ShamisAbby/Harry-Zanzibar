@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, Waves } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -111,21 +111,19 @@ export function Header() {
         </NavigationMenu>
 
         <div className="hidden lg:block">
-          <Button render={<Link href="/sansibar-touren" />} size="lg" className="rounded-full px-6">
+          <Button render={<Link href="/sansibar-touren" />} nativeButton={false} size="lg" className="rounded-full px-6">
             Touren entdecken
           </Button>
         </div>
 
         <Sheet>
           <SheetTrigger
-            render={
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Menü öffnen"
-                className={cn("lg:hidden", !isScrolled && "text-white hover:bg-white/10 hover:text-white")}
-              />
-            }
+            aria-label="Menü öffnen"
+            className={cn(
+              buttonVariants({ variant: "ghost", size: "icon" }),
+              "lg:hidden",
+              !isScrolled && "text-white hover:bg-white/10 hover:text-white"
+            )}
           >
             <Menu className="size-5" />
           </SheetTrigger>
@@ -166,7 +164,7 @@ export function Header() {
                   </div>
                 )
               )}
-              <Button render={<Link href="/sansibar-touren" />} size="lg" className="mt-4 rounded-full">
+              <Button render={<Link href="/sansibar-touren" />} nativeButton={false} size="lg" className="mt-4 rounded-full">
                 Touren entdecken
               </Button>
             </nav>

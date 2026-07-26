@@ -3,15 +3,16 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
+     *
+     * Deliberately does NOT use WithoutModelEvents: Tour/TourCategory rely on
+     * model events (via HasSlug) to generate slugs, and TourReview relies on
+     * a saved-event hook to keep Tour::rating_cache in sync.
      */
     public function run(): void
     {
@@ -28,5 +29,10 @@ class DatabaseSeeder extends Seeder
             ]
         );
         $admin->assignRole('super_admin');
+
+        $this->call([
+            TourCategorySeeder::class,
+            TourSeeder::class,
+        ]);
     }
 }
