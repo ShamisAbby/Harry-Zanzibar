@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Manrope } from "next/font/google";
 import "./globals.css";
+import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
+import { WhatsAppButton } from "@/components/layout/whatsapp-button";
+import { Toaster } from "@/components/ui/sonner";
 
 const playfairDisplay = Playfair_Display({
   variable: "--font-heading",
@@ -33,7 +38,13 @@ export default function RootLayout({
       <body
         className={`${playfairDisplay.variable} ${manrope.variable} antialiased`}
       >
-        {children}
+        <SmoothScrollProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+          <WhatsAppButton />
+        </SmoothScrollProvider>
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );

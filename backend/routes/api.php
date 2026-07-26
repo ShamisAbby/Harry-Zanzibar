@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\NewsletterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,3 +21,6 @@ Route::get('/v1/ping', function (Request $request) {
         'time' => now()->toIso8601String(),
     ]);
 });
+
+Route::post('/v1/newsletter', [NewsletterController::class, 'store'])
+    ->middleware('throttle:6,1');
