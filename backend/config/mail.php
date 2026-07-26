@@ -115,4 +115,16 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Notification Address
+    |--------------------------------------------------------------------------
+    |
+    | Where new-booking notifications are sent. Falls back to the "from"
+    | address if not set explicitly.
+    |
+    */
+
+    'admin_notification_address' => env('ADMIN_NOTIFICATION_EMAIL', env('MAIL_FROM_ADDRESS')),
+
 ];

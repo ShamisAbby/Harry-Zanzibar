@@ -34,3 +34,6 @@ Route::get('/v1/tour-categories', [TourCategoryController::class, 'index']);
 
 Route::post('/v1/bookings', [BookingController::class, 'store'])
     ->middleware('throttle:10,1');
+
+Route::get('/v1/bookings/{reference}', [BookingController::class, 'show'])
+    ->middleware('throttle:20,1');

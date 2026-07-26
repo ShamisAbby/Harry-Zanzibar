@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Mail\BookingConfirmedMail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class Booking extends Model
@@ -36,6 +38,12 @@ class Booking extends Model
     {
         static::creating(function (self $booking) {
             $booking->reference ??= 'HZ-' . now()->format('Y') . '-' . strtoupper(Str::random(6));
+        });
+
+        static::updated(function (self $booking) {
+            if ($booking->wasChanged('status') && $booking->status === 'confirmed') {
+                Mail::to($booking->customer_email)->send(new BookingConfirmedMail($booking));
+            }
         });
     }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -63,6 +64,12 @@ export function BookingForm({ tourId, tourTitle }: { tourId: string; tourTitle: 
           Ihre Referenz: <strong>{result.reference}</strong>. Harry meldet sich innerhalb von
           24 Stunden persönlich bei Ihnen.
         </p>
+        <Link
+          href={`/buchung-bestaetigung?ref=${result.reference}`}
+          className="mt-4 inline-block text-sm font-semibold text-primary underline-offset-4 hover:underline"
+        >
+          Buchungsstatus ansehen
+        </Link>
       </div>
     );
   }

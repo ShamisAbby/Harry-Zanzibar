@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BookingStatusResource;
+use App\Mail\BookingReceivedAdminMail;
+use App\Mail\BookingReceivedMail;
 use App\Models\Booking;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
@@ -27,9 +31,27 @@ class BookingController extends Controller
             'source' => 'website',
         ]);
 
+        Mail::to($booking->customer_email)->send(new BookingReceivedMail($booking));
+
+        $adminEmail = config('mail.admin_notification_address');
+        if ($adminEmail) {
+            Mail::to($adminEmail)->send(new BookingReceivedAdminMail($booking));
+        }
+
         return response()->json([
             'message' => 'Vielen Dank für Ihre Anfrage! Harry meldet sich innerhalb von 24 Stunden persönlich bei Ihnen.',
             'reference' => $booking->reference,
         ], 201);
+    }
+
+    public function show(string $reference): JsonResponse
+    {
+        $booking = Booking::with('tour')
+            ->where('reference', $reference)
+            ->firstOrFail();
+
+        return response()->json([
+            'data' => new BookingStatusResource($booking),
+        ]);
     }
 }
