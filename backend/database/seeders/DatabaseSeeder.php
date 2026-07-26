@@ -15,11 +15,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->call(RoleSeeder::class);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Local-dev-only super admin. Change this password before deploying
+        // anywhere beyond your own machine.
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@harry-zanzibar.test'],
+            [
+                'name' => 'Harry Admin',
+                'password' => bcrypt('password'),
+                'email_verified_at' => now(),
+            ]
+        );
+        $admin->assignRole('super_admin');
     }
 }
