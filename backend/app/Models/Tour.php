@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,7 +18,7 @@ use Spatie\Sluggable\SlugOptions;
 
 class Tour extends Model implements HasMedia
 {
-    use HasSlug, InteractsWithMedia, LogsActivity, SoftDeletes;
+    use HasFactory, HasSlug, InteractsWithMedia, LogsActivity, SoftDeletes;
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -26,6 +27,16 @@ class Tour extends Model implements HasMedia
             ->logOnlyDirty()
             ->dontLogEmptyChanges();
     }
+
+    /**
+     * Explicit in-memory defaults so a freshly-instantiated (not-yet-persisted)
+     * Tour reports 0 rather than null - Eloquent doesn't read back DB column
+     * defaults into the model instance after an INSERT.
+     */
+    protected $attributes = [
+        'rating_cache' => 0,
+        'review_count_cache' => 0,
+    ];
 
     protected $fillable = [
         'tour_category_id',
@@ -128,10 +139,22 @@ class Tour extends Model implements HasMedia
     public function refreshRatingCache(): void
     {
         $approved = $this->approvedReviews()->get();
+        $count = $approved->count();
 
-        $this->update([
-            'rating_cache' => $approved->count() ? round($approved->avg('rating'), 1) : 0,
-            'review_count_cache' => $approved->count(),
+        // A direct query-builder update, not update()/save(): rating_cache and
+        // review_count_cache are excluded from $fillable on purpose (system-computed,
+        // never admin-editable), and this also sidesteps Eloquent's dirty-tracking,
+        // which could silently skip a column when a stale in-memory $this happens to
+        // already hold the new value (observed when multiple review-save events for
+        // the same tour fire back-to-back and race on which loaded instance saves last).
+        static::whereKey($this->getKey())->update([
+            'rating_cache' => $count ? round($approved->avg('rating'), 1) : 0,
+            'review_count_cache' => $count,
+        ]);
+
+        $this->forceFill([
+            'rating_cache' => $count ? round($approved->avg('rating'), 1) : 0,
+            'review_count_cache' => $count,
         ]);
     }
 }

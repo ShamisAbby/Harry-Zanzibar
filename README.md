@@ -49,7 +49,15 @@ cd backend
 composer install
 cp .env.example .env
 php artisan key:generate
-php artisan migrate --seed
+php artisan migrate
+# Generates Filament Shield's permissions/policies. Must run before
+# seeding: RoleSeeder grants super_admin every permission that exists
+# at seed time, so if you skip this step super_admin ends up with zero
+# permissions and can't access the CMS (its "super admin" bypass is a
+# real permission grant in the DB, not a code-level gate - see
+# database/seeders/RoleSeeder.php).
+php artisan shield:generate --all --panel=admin --no-interaction
+php artisan db:seed
 php artisan storage:link
 cd ..
 
@@ -77,7 +85,10 @@ cd backend
 composer install
 copy .env.example .env
 php artisan key:generate
-php artisan migrate --seed
+php artisan migrate
+:: Must run before seeding - see the macOS steps above for why.
+php artisan shield:generate --all --panel=admin --no-interaction
+php artisan db:seed
 php artisan storage:link
 cd ..
 

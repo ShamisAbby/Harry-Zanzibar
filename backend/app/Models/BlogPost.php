@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,7 +17,7 @@ use Spatie\Sluggable\SlugOptions;
 
 class BlogPost extends Model implements HasMedia
 {
-    use HasSlug, InteractsWithMedia, LogsActivity, SoftDeletes;
+    use HasFactory, HasSlug, InteractsWithMedia, LogsActivity, SoftDeletes;
 
     public function getActivitylogOptions(): LogOptions
     {
