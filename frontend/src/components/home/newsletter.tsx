@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { WaveDivider } from "@/components/ui/wave-divider";
 import { api } from "@/lib/api";
+import { trackEvent } from "@/lib/track-event";
 
 const newsletterSchema = z.object({
   email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),
@@ -30,6 +31,7 @@ export function Newsletter() {
   const onSubmit = async (values: NewsletterValues) => {
     try {
       await api.post("/v1/newsletter", values);
+      trackEvent("newsletter_signup");
       setIsSuccess(true);
       reset();
     } catch (error) {

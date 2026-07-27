@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\BlogPostController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\ContactMessageController;
 use App\Http\Controllers\Api\NewsletterController;
+use App\Http\Controllers\Api\SiteSettingController;
 use App\Http\Controllers\Api\TourCategoryController;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\TourReviewController;
@@ -48,3 +49,5 @@ Route::post('/v1/contact', [ContactMessageController::class, 'store'])
     ->middleware('throttle:6,1');
 
 Route::get('/v1/reviews', [TourReviewController::class, 'index']);
+
+Route::get('/v1/settings/analytics', [SiteSettingController::class, 'analytics']);

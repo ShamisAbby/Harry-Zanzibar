@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { api } from "@/lib/api";
+import { trackEvent } from "@/lib/track-event";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Bitte geben Sie Ihren Namen ein."),
@@ -34,6 +35,7 @@ export function ContactForm() {
   const onSubmit = async (values: ContactValues) => {
     try {
       await api.post("/v1/contact", values);
+      trackEvent("contact_form_submit");
       setIsSuccess(true);
       reset();
     } catch (error) {

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
 import { siteConfig } from "@/config/site";
+import { trackEvent } from "@/lib/track-event";
 
 const GREETING = encodeURIComponent(
   "Hallo Harry! Ich interessiere mich für eine Sansibar Tour und hätte gerne mehr Informationen."
@@ -15,6 +16,7 @@ export function WhatsAppButton() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Über WhatsApp kontaktieren"
+      onClick={() => trackEvent("whatsapp_click", { location: "floating_button" })}
       className="fixed bottom-6 right-6 z-40 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/20"
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}

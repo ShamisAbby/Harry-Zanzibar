@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { Mail, MapPin, Phone, Star, Waves } from "lucide-react";
 import { FacebookIcon, InstagramIcon } from "@/components/icons/social-icons";
 import { siteConfig } from "@/config/site";
+import { trackEvent } from "@/lib/track-event";
 
 const footerLinks = [
   {
@@ -105,7 +108,11 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="size-4 shrink-0 text-[#00C2C7]" />
-                <a href={`tel:+${siteConfig.whatsappNumber}`} className="hover:text-white">
+                <a
+                  href={`tel:+${siteConfig.whatsappNumber}`}
+                  onClick={() => trackEvent("phone_click", { location: "footer" })}
+                  className="hover:text-white"
+                >
                   {siteConfig.phoneDisplay}
                 </a>
               </li>

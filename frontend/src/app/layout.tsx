@@ -7,8 +7,10 @@ import { Footer } from "@/components/layout/footer";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { Toaster } from "@/components/ui/sonner";
 import { CookieConsentBanner } from "@/components/consent/cookie-consent-banner";
+import { AnalyticsScripts } from "@/components/analytics/analytics-scripts";
 import { siteConfig } from "@/config/site";
 import { organizationJsonLd } from "@/lib/schema";
+import { getAnalyticsSettings } from "@/lib/analytics-settings";
 
 const playfairDisplay = Playfair_Display({
   variable: "--font-heading",
@@ -29,30 +31,37 @@ const title = {
 const description =
   "Harry, Ihr deutschsprachiger Reiseleiter auf Sansibar. Individuelle Sansibar Touren, Tagesausflüge und Safari-Erlebnisse – persönlich, authentisch, auf Deutsch.";
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
-  title,
-  description,
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    type: "website",
-    locale: "de_DE",
-    siteName: siteConfig.shortName,
-    title: title.default,
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getAnalyticsSettings();
+
+  return {
+    metadataBase: new URL(siteConfig.url),
+    title,
     description,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: title.default,
-    description,
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+    alternates: {
+      canonical: "/",
+    },
+    openGraph: {
+      type: "website",
+      locale: "de_DE",
+      siteName: siteConfig.shortName,
+      title: title.default,
+      description,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: title.default,
+      description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+    verification: settings?.googleSiteVerification
+      ? { google: settings.googleSiteVerification }
+      : undefined,
+  };
+}
 
 export default function RootLayout({
   children,
@@ -75,6 +84,7 @@ export default function RootLayout({
           <WhatsAppButton />
         </SmoothScrollProvider>
         <CookieConsentBanner />
+        <AnalyticsScripts />
         <Toaster position="top-center" richColors />
       </body>
     </html>

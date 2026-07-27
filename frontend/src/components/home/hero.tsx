@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { PlaceholderImage } from "@/components/ui/placeholder-image";
 import { siteConfig } from "@/config/site";
+import { trackEvent } from "@/lib/track-event";
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
@@ -136,6 +137,7 @@ export function Hero() {
                   href={`https://wa.me/${siteConfig.whatsappNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackEvent("whatsapp_click", { location: "hero" })}
                 />
               }
               nativeButton={false}

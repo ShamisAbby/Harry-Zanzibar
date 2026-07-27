@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { api } from "@/lib/api";
 import { siteConfig } from "@/config/site";
+import { trackEvent } from "@/lib/track-event";
 
 const bookingSchema = z.object({
   customer_name: z.string().min(2, "Bitte geben Sie Ihren Namen ein."),
@@ -46,6 +47,7 @@ export function BookingForm({ tourId, tourTitle }: { tourId: string; tourTitle: 
         travelers_count: values.travelers_count ? Number(values.travelers_count) : undefined,
         tour_id: tourId,
       });
+      trackEvent("booking_submit", { tour_id: tourId, tour_title: tourTitle });
       setResult({ reference: data.reference });
     } catch (error) {
       const message = isAxiosError(error) ? error.response?.data?.message : undefined;
@@ -128,6 +130,7 @@ export function BookingForm({ tourId, tourTitle }: { tourId: string; tourTitle: 
           href={`https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(`Hallo Harry! Ich interessiere mich für "${tourTitle}".`)}`}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackEvent("whatsapp_click", { location: "booking_form", tour_title: tourTitle })}
           className="inline-flex items-center gap-1 font-semibold text-[#25D366]"
         >
           <MessageCircle className="size-4" /> WhatsApp
