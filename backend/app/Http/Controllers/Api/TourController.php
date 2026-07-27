@@ -8,9 +8,13 @@ use App\Http\Resources\TourSummaryResource;
 use App\Models\Tour;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class TourController extends Controller
 {
+    /** Short TTL is enough: content changes are admin-driven and infrequent. */
+    private const CACHE_SECONDS = 60;
+
     public function index(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -49,41 +53,50 @@ class TourController extends Controller
             default => $query->orderByDesc('is_featured')->orderBy('order'),
         };
 
-        $tours = $query->paginate($validated['per_page'] ?? 12);
+        $page = (int) $request->get('page', 1);
+        $cacheKey = 'tours:index:' . md5(json_encode([$validated, $page]));
 
-        return response()->json([
-            'data' => TourSummaryResource::collection($tours->items()),
-            'meta' => [
-                'currentPage' => $tours->currentPage(),
-                'lastPage' => $tours->lastPage(),
-                'total' => $tours->total(),
-                'perPage' => $tours->perPage(),
-            ],
-        ]);
+        $payload = Cache::remember($cacheKey, self::CACHE_SECONDS, function () use ($query, $validated) {
+            $tours = $query->paginate($validated['per_page'] ?? 12);
+
+            return [
+                'data' => TourSummaryResource::collection($tours->items())->resolve(),
+                'meta' => [
+                    'currentPage' => $tours->currentPage(),
+                    'lastPage' => $tours->lastPage(),
+                    'total' => $tours->total(),
+                    'perPage' => $tours->perPage(),
+                ],
+            ];
+        });
+
+        return response()->json($payload);
     }
 
     public function show(string $slug): JsonResponse
     {
-        $tour = Tour::query()
-            ->active()
-            ->with(['category', 'approvedReviews'])
-            ->where('slug', $slug)
-            ->firstOrFail();
-
-        $tour->setAttribute(
-            'relatedTours',
-            Tour::query()
+        $payload = Cache::remember("tours:show:{$slug}", self::CACHE_SECONDS, function () use ($slug) {
+            $tour = Tour::query()
                 ->active()
-                ->with('category')
-                ->where('tour_category_id', $tour->tour_category_id)
-                ->where('id', '!=', $tour->id)
-                ->orderByDesc('is_featured')
-                ->limit(3)
-                ->get()
-        );
+                ->with(['category', 'approvedReviews'])
+                ->where('slug', $slug)
+                ->firstOrFail();
 
-        return response()->json([
-            'data' => new TourDetailResource($tour),
-        ]);
+            $tour->setAttribute(
+                'relatedTours',
+                Tour::query()
+                    ->active()
+                    ->with('category')
+                    ->where('tour_category_id', $tour->tour_category_id)
+                    ->where('id', '!=', $tour->id)
+                    ->orderByDesc('is_featured')
+                    ->limit(3)
+                    ->get()
+            );
+
+            return ['data' => (new TourDetailResource($tour))->resolve()];
+        });
+
+        return response()->json($payload);
     }
 }

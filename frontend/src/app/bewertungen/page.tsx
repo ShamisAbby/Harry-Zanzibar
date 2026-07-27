@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/bewertungen" },
 };
 
+export const revalidate = 300;
+
 export default async function BewertungenPage() {
   const reviews = await getReviews(30).catch(() => []);
   const average = reviews.length

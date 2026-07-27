@@ -10,6 +10,8 @@ import { Partners } from "@/components/home/partners";
 import { Faq } from "@/components/home/faq";
 import { Newsletter } from "@/components/home/newsletter";
 
+export const revalidate = 300;
+
 export default function Home() {
   return (
     <>

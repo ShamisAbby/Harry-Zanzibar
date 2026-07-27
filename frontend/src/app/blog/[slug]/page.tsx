@@ -20,6 +20,8 @@ interface BlogPageProps {
   params: Promise<{ slug: string }>;
 }
 
+export const revalidate = 300;
+
 async function loadPost(slug: string) {
   try {
     return await getBlogPost(slug);

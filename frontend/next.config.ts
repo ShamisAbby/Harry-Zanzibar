@@ -3,6 +3,8 @@ import type { NextConfig } from "next";
 const SAFARI_REDIRECT_URL = "https://safarimitharry.com";
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
+  compress: true,
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [

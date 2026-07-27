@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/blog" },
 };
 
+// Blog content changes infrequently; ISR avoids hitting the API on every request.
+export const revalidate = 300;
+
 export default async function BlogPage() {
   const posts = await getBlogPosts({ perPage: 24 })
     .then((res) => res.data)

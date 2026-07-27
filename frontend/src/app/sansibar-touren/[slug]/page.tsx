@@ -22,6 +22,8 @@ interface TourPageProps {
   params: Promise<{ slug: string }>;
 }
 
+export const revalidate = 120;
+
 async function loadTour(slug: string) {
   try {
     return await getTour(slug);
