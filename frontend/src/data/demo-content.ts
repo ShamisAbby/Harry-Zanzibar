@@ -1,4 +1,4 @@
-import type { BlogPostSummary, FaqItem, StatItem, Testimonial } from "@/types/content";
+import type { FaqItem, StatItem, Testimonial } from "@/types/content";
 
 export const demoTestimonials: Testimonial[] = [
   {
@@ -27,42 +27,6 @@ export const demoTestimonials: Testimonial[] = [
       "Persönlicher, authentischer und professioneller geht es nicht. Die Mnemba-Tour war eines der eindrücklichsten Erlebnisse meines Lebens.",
     rating: 5,
     tourTitle: "Mnemba Island Schnorcheltour",
-  },
-];
-
-export const demoBlogPosts: BlogPostSummary[] = [
-  {
-    id: "b1",
-    slug: "beste-reisezeit-sansibar",
-    title: "Die beste Reisezeit für Sansibar",
-    excerpt:
-      "Wann sich ein Besuch auf der Gewürzinsel wirklich lohnt – Klima, Regenzeiten und Insider-Monate für Sonnenanbeter.",
-    image: "Sansibar Klima & Jahreszeiten",
-    category: "Reiseplanung",
-    readingTime: "6 Min.",
-    publishedAt: "2026-06-02",
-  },
-  {
-    id: "b2",
-    slug: "top-straende-sansibar",
-    title: "Die schönsten Strände Sansibars",
-    excerpt:
-      "Von Nungwi bis Paje: unsere persönliche Rangliste der traumhaftesten Strandabschnitte der Insel.",
-    image: "Nungwi Strand",
-    category: "Strände",
-    readingTime: "8 Min.",
-    publishedAt: "2026-05-18",
-  },
-  {
-    id: "b3",
-    slug: "stone-town-reisefuehrer",
-    title: "Stone Town: Der komplette Reiseführer",
-    excerpt:
-      "Gassen, Gewürzmärkte und Geschichte – so erleben Sie die UNESCO-Altstadt wie ein Einheimischer.",
-    image: "Stone Town Gassen",
-    category: "Kultur",
-    readingTime: "10 Min.",
-    publishedAt: "2026-04-27",
   },
 ];
 

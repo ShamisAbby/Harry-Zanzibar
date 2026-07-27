@@ -1,10 +1,15 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { PlaceholderImage } from "@/components/ui/placeholder-image";
-import { Badge } from "@/components/ui/badge";
-import { demoBlogPosts } from "@/data/demo-content";
+import { BlogPostCard } from "@/components/blog/blog-post-card";
+import { getBlogPosts } from "@/lib/blog";
 
-export function LatestBlog() {
+export async function LatestBlog() {
+  const posts = await getBlogPosts({ perPage: 3 })
+    .then((res) => res.data)
+    .catch(() => []);
+
+  if (posts.length === 0) return null;
+
   return (
     <section className="bg-background py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -26,32 +31,8 @@ export function LatestBlog() {
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {demoBlogPosts.map((post) => (
-            <Link
-              key={post.id}
-              href={`/blog/${post.slug}`}
-              className="group flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card transition-shadow hover:shadow-xl hover:shadow-primary/10"
-            >
-              <div className="relative aspect-[16/10] overflow-hidden">
-                <PlaceholderImage
-                  label={post.image}
-                  tone="palm"
-                  className="size-full transition-transform duration-500 group-hover:scale-105"
-                />
-                <Badge className="absolute left-3 top-3 bg-white/90 text-foreground hover:bg-white/90">
-                  {post.category}
-                </Badge>
-              </div>
-              <div className="flex flex-1 flex-col p-5">
-                <h3 className="font-heading text-lg font-semibold transition-colors group-hover:text-primary">
-                  {post.title}
-                </h3>
-                <p className="mt-2 line-clamp-2 flex-1 text-sm text-muted-foreground">
-                  {post.excerpt}
-                </p>
-                <p className="mt-4 text-xs text-muted-foreground">{post.readingTime} Lesezeit</p>
-              </div>
-            </Link>
+          {posts.map((post) => (
+            <BlogPostCard key={post.id} post={post} />
           ))}
         </div>
       </div>

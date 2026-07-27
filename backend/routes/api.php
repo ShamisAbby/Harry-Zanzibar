@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\BlogPostController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\NewsletterController;
 use App\Http\Controllers\Api\TourCategoryController;
@@ -37,3 +38,6 @@ Route::post('/v1/bookings', [BookingController::class, 'store'])
 
 Route::get('/v1/bookings/{reference}', [BookingController::class, 'show'])
     ->middleware('throttle:20,1');
+
+Route::get('/v1/blog', [BlogPostController::class, 'index']);
+Route::get('/v1/blog/{slug}', [BlogPostController::class, 'show']);

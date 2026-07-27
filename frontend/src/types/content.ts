@@ -8,17 +8,6 @@ export interface Testimonial {
   avatar?: string;
 }
 
-export interface BlogPostSummary {
-  id: string;
-  slug: string;
-  title: string;
-  excerpt: string;
-  image: string;
-  category: string;
-  readingTime: string;
-  publishedAt: string;
-}
-
 export interface FaqItem {
   id: string;
   question: string;

@@ -33,6 +33,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             TourCategorySeeder::class,
             TourSeeder::class,
+            BlogCategorySeeder::class,
+            BlogPostSeeder::class,
         ]);
     }
 }
