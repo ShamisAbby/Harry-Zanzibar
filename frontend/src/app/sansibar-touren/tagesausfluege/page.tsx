@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Sansibar Tagesausflüge",
   description:
     "Alle Sansibar Tagesausflüge im Überblick: Safari Blue, Mnemba Island, Stone Town und mehr – persönlich geführt auf Deutsch.",
+  alternates: { canonical: "/sansibar-touren/tagesausfluege" },
 };
 
 export default function TagesausfluegePage() {

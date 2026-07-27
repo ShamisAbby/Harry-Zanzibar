@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Sansibar Touren & Ausflüge",
   description:
     "Alle Sansibar Touren im Überblick: Tagesausflüge und Mehrtagestouren, persönlich geführt von Ihrem deutschsprachigen Guide Harry.",
+  alternates: { canonical: "/sansibar-touren" },
 };
 
 export default function SansibarTourenPage() {

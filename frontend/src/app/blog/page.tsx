@@ -6,10 +6,13 @@ export const metadata: Metadata = {
   title: "Blog – Reisetipps für Sansibar",
   description:
     "Reisetipps, Insider-Wissen und praktische Informationen für Ihre Sansibar-Reise – von Harry, Ihrem deutschsprachigen Guide vor Ort.",
+  alternates: { canonical: "/blog" },
 };
 
 export default async function BlogPage() {
-  const { data: posts } = await getBlogPosts({ perPage: 24 });
+  const posts = await getBlogPosts({ perPage: 24 })
+    .then((res) => res.data)
+    .catch(() => []);
 
   return (
     <div className="pt-32 pb-24">

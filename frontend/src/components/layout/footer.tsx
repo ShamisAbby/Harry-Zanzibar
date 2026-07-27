@@ -9,7 +9,7 @@ const footerLinks = [
     links: [
       { label: "Tagesausflüge", href: "/sansibar-touren/tagesausfluege" },
       { label: "Mehrtagestouren", href: "/sansibar-touren/mehrtagestouren" },
-      { label: "Safari Blue", href: "/sansibar-touren/safari-blue-sansibar" },
+      { label: "Safari Blue", href: "/sansibar-touren/safari-blue" },
       { label: "Stone Town Tour", href: "/sansibar-touren/stone-town-kulturtour" },
     ],
   },

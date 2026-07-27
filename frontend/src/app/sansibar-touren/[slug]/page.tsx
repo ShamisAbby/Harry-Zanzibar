@@ -15,6 +15,8 @@ import { TourCard } from "@/components/tours/tour-card";
 import { BookingForm } from "@/components/tours/booking-form";
 import { TourMap } from "@/components/tours/tour-map";
 import { getTour } from "@/lib/tours";
+import { breadcrumbJsonLd } from "@/lib/schema";
+import { siteConfig } from "@/config/site";
 
 interface TourPageProps {
   params: Promise<{ slug: string }>;
@@ -36,9 +38,13 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
   return {
     title: tour.title,
     description: tour.excerpt,
+    alternates: {
+      canonical: `/sansibar-touren/${tour.slug}`,
+    },
     openGraph: {
       title: tour.title,
       description: tour.excerpt,
+      type: "website",
       images: tour.gallery[0] ? [tour.gallery[0].url] : undefined,
     },
   };
@@ -74,12 +80,40 @@ export default async function TourDetailPage({ params }: TourPageProps) {
       : undefined,
   };
 
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: "Home", url: siteConfig.url },
+    { name: "Sansibar Touren", url: `${siteConfig.url}/sansibar-touren` },
+    { name: tour.title, url: `${siteConfig.url}/sansibar-touren/${tour.slug}` },
+  ]);
+
+  const faqLd = tour.faqs.length > 0
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: tour.faqs.map((faq) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: { "@type": "Answer", text: faq.answer },
+        })),
+      }
+    : null;
+
   return (
     <div className="pb-24 pt-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+      {faqLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+        />
+      )}
 
       {/* Gallery */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

@@ -6,6 +6,9 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { Toaster } from "@/components/ui/sonner";
+import { CookieConsentBanner } from "@/components/consent/cookie-consent-banner";
+import { siteConfig } from "@/config/site";
+import { organizationJsonLd } from "@/lib/schema";
 
 const playfairDisplay = Playfair_Display({
   variable: "--font-heading",
@@ -19,13 +22,36 @@ const manrope = Manrope({
   display: "swap",
 });
 
+const title = {
+  default: "Harry – Deutscher Reiseleiter Sansibar | Sansibar Touren & Ausflüge",
+  template: "%s | Harry Sansibar",
+};
+const description =
+  "Harry, Ihr deutschsprachiger Reiseleiter auf Sansibar. Individuelle Sansibar Touren, Tagesausflüge und Safari-Erlebnisse – persönlich, authentisch, auf Deutsch.";
+
 export const metadata: Metadata = {
-  title: {
-    default: "Harry – Deutscher Reiseleiter Sansibar | Sansibar Touren & Ausflüge",
-    template: "%s | Harry Sansibar",
+  metadataBase: new URL(siteConfig.url),
+  title,
+  description,
+  alternates: {
+    canonical: "/",
   },
-  description:
-    "Harry, Ihr deutschsprachiger Reiseleiter auf Sansibar. Individuelle Sansibar Touren, Tagesausflüge und Safari-Erlebnisse – persönlich, authentisch, auf Deutsch.",
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    siteName: siteConfig.shortName,
+    title: title.default,
+    description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: title.default,
+    description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -38,12 +64,17 @@ export default function RootLayout({
       <body
         className={`${playfairDisplay.variable} ${manrope.variable} antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         <SmoothScrollProvider>
           <Header />
           <main>{children}</main>
           <Footer />
           <WhatsAppButton />
         </SmoothScrollProvider>
+        <CookieConsentBanner />
         <Toaster position="top-center" richColors />
       </body>
     </html>

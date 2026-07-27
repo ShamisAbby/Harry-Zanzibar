@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Sansibar Mehrtagestouren",
   description:
     "Individuell geplante Mehrtagesreisen auf Sansibar – private Strandvillen, persönliche Betreuung und maßgeschneiderte Erlebnisse.",
+  alternates: { canonical: "/sansibar-touren/mehrtagestouren" },
 };
 
 export default function MehrtagestourenPage() {

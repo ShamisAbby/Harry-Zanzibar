@@ -14,6 +14,7 @@ import { BlogPostCard } from "@/components/blog/blog-post-card";
 import { Button } from "@/components/ui/button";
 import { getBlogPost } from "@/lib/blog";
 import { siteConfig } from "@/config/site";
+import { breadcrumbJsonLd } from "@/lib/schema";
 
 interface BlogPageProps {
   params: Promise<{ slug: string }>;
@@ -35,6 +36,9 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
   return {
     title: post.metaTitle || post.title,
     description: post.metaDescription || post.excerpt,
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+    },
     openGraph: {
       title: post.metaTitle || post.title,
       description: post.metaDescription || post.excerpt,
@@ -62,14 +66,25 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
       "@type": "Organization",
       name: siteConfig.name,
     },
-    ...(post.faqs.length > 0 && {
-      mainEntity: post.faqs.map((faq) => ({
-        "@type": "Question",
-        name: faq.question,
-        acceptedAnswer: { "@type": "Answer", text: faq.answer },
-      })),
-    }),
   };
+
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: "Home", url: siteConfig.url },
+    { name: "Blog", url: `${siteConfig.url}/blog` },
+    { name: post.title, url: `${siteConfig.url}/blog/${post.slug}` },
+  ]);
+
+  const faqLd = post.faqs.length > 0
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: post.faqs.map((faq) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: { "@type": "Answer", text: faq.answer },
+        })),
+      }
+    : null;
 
   return (
     <article className="pb-24 pt-24">
@@ -77,6 +92,16 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+      {faqLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+        />
+      )}
 
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <nav className="py-4 text-sm text-muted-foreground">
