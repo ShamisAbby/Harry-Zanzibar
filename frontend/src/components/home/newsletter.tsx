@@ -8,6 +8,7 @@ import { isAxiosError } from "axios";
 import { Mail, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { WaveDivider } from "@/components/ui/wave-divider";
 import { api } from "@/lib/api";
 
 const newsletterSchema = z.object({
@@ -42,7 +43,8 @@ export function Newsletter() {
   };
 
   return (
-    <section className="bg-primary py-20 text-primary-foreground">
+    <section className="relative bg-primary py-20 text-primary-foreground">
+      <WaveDivider flip className="absolute -bottom-px left-0 text-[#083B66]" />
       <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
         <Mail className="mx-auto size-10 text-white/80" />
         <h2 className="mt-4 font-heading text-3xl font-semibold">

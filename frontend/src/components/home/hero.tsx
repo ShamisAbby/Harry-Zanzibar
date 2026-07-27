@@ -4,16 +4,20 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion } from "framer-motion";
 import { ChevronDown, MessageCircle, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 import { PlaceholderImage } from "@/components/ui/placeholder-image";
 import { siteConfig } from "@/config/site";
 
-gsap.registerPlugin(SplitText);
+gsap.registerPlugin(SplitText, ScrollTrigger);
 
 export function Hero() {
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!headingRef.current) return;
@@ -30,6 +34,19 @@ export function Hero() {
         delay: 0.2,
       });
 
+      if (bgRef.current && sectionRef.current) {
+        gsap.to(bgRef.current, {
+          yPercent: 18,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      }
+
       return () => split.revert();
     }, headingRef);
 
@@ -37,12 +54,14 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden">
-      <PlaceholderImage
-        label="Nungwi, Sansibar – Sonnenuntergang über dem Indischen Ozean"
-        tone="sunset"
-        className="absolute inset-0"
-      />
+    <section ref={sectionRef} className="relative flex min-h-screen items-center overflow-hidden">
+      <div ref={bgRef} className="absolute inset-0 scale-110">
+        <PlaceholderImage
+          label="Nungwi, Sansibar – Sonnenuntergang über dem Indischen Ozean"
+          tone="sunset"
+          className="size-full"
+        />
+      </div>
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/40" />
 
       {/* Floating ambient particles */}
@@ -100,30 +119,34 @@ export function Hero() {
           transition={{ delay: 1.1, duration: 0.6 }}
           className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
-          <Button
-            render={<Link href="/sansibar-touren" />}
-            nativeButton={false}
-            size="lg"
-            className="h-12 rounded-full px-8 text-base"
-          >
-            Touren entdecken
-          </Button>
-          <Button
-            render={
-              <a
-                href={`https://wa.me/${siteConfig.whatsappNumber}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              />
-            }
-            nativeButton={false}
-            size="lg"
-            variant="outline"
-            className="h-12 rounded-full border-white/40 bg-white/5 px-8 text-base text-white hover:bg-white/15 hover:text-white"
-          >
-            <MessageCircle className="size-4" />
-            Direkt anfragen
-          </Button>
+          <MagneticButton>
+            <Button
+              render={<Link href="/sansibar-touren" />}
+              nativeButton={false}
+              size="lg"
+              className="h-12 rounded-full px-8 text-base"
+            >
+              Touren entdecken
+            </Button>
+          </MagneticButton>
+          <MagneticButton>
+            <Button
+              render={
+                <a
+                  href={`https://wa.me/${siteConfig.whatsappNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                />
+              }
+              nativeButton={false}
+              size="lg"
+              variant="outline"
+              className="h-12 rounded-full border-white/40 bg-white/5 px-8 text-base text-white hover:bg-white/15 hover:text-white"
+            >
+              <MessageCircle className="size-4" />
+              Direkt anfragen
+            </Button>
+          </MagneticButton>
         </motion.div>
 
         <motion.div
