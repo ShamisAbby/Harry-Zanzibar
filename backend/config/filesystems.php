@@ -60,6 +60,22 @@ return [
             'report' => false,
         ],
 
+        // Cloudflare R2 is S3-API-compatible; kept as its own disk (rather than
+        // reusing 's3' with different env values) so both can be configured
+        // side by side without one silently overwriting the other's credentials.
+        'r2' => [
+            'driver' => 's3',
+            'key' => env('R2_ACCESS_KEY_ID'),
+            'secret' => env('R2_SECRET_ACCESS_KEY'),
+            'region' => 'auto',
+            'bucket' => env('R2_BUCKET'),
+            'url' => env('R2_URL'),
+            'endpoint' => env('R2_ENDPOINT'),
+            'use_path_style_endpoint' => true,
+            'throw' => false,
+            'report' => false,
+        ],
+
     ],
 
     /*

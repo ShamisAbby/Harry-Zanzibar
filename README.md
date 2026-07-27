@@ -133,6 +133,11 @@ npm run build
 npm run start
 ```
 
+See **[docs/deployment.md](docs/deployment.md)** for the full production
+guide: required environment variables, the queue worker and scheduler
+(Supervisor/cron configs are provided), reverse proxy examples, backups,
+and a pre-launch checklist.
+
 ## Project Status
 
 This project is being built in sequential phases. See open issues / project board for current phase status:
